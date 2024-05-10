@@ -1,0 +1,164 @@
+package vuthitham_de1;
+
+import java.util.*;
+
+class MonHoc {
+    String maMH;
+    String tenMH;
+    int soHT;
+
+    public MonHoc(String maMH, String tenMH, int soHT) {
+        this.maMH = maMH;
+        this.tenMH = tenMH;
+        this.soHT = soHT;
+    }
+}
+
+class Nguoi {
+    String ma;
+    String hoTen;
+    boolean gioiTinh;
+    int namSinh;
+    String noiSinh;
+
+    public Nguoi(String ma, String hoTen, boolean gioiTinh, int namSinh, String noiSinh) {
+        this.ma = ma;
+        this.hoTen = hoTen;
+        this.gioiTinh = gioiTinh;
+        this.namSinh = namSinh;
+        this.noiSinh = noiSinh;
+    }
+}
+
+class SinhVien extends Nguoi {
+    List<MonHoc> monHocList;
+    List<Double> diemMHList;
+
+    public SinhVien(String ma, String hoTen, boolean gioiTinh, int namSinh, String noiSinh) {
+        super(ma, hoTen, gioiTinh, namSinh, noiSinh);
+        monHocList = new ArrayList<>();
+        diemMHList = new ArrayList<>();
+    }
+
+    public void addMonHoc(MonHoc monHoc, double diemMH) {
+        monHocList.add(monHoc);
+        diemMHList.add(diemMH);
+    }
+
+    public double calculateAverageMark() {
+        if (diemMHList.isEmpty()) {
+            return 0;
+        }
+
+        double totalMark = 0;
+        for (double mark : diemMHList) {
+            totalMark += mark;
+        }
+        return totalMark / diemMHList.size();
+    }
+
+    public boolean isExcellentStudent() {
+        return calculateAverageMark() >= 9;
+    }
+
+    public String toString() {
+        return ma + " | " + hoTen + " | " + calculateAverageMark() + " | " + (isExcellentStudent() ? "100USD" : "0");
+    }
+}
+
+public class vttham_de1 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        List<MonHoc> danhSachMonHoc = new ArrayList<>();
+        List<SinhVien> danhSachSinhVien = new ArrayList<>();
+
+        boolean running = true;
+        while (running) {
+            System.out.println("Menu:");
+            System.out.println("1. Nhap danh sach mon hoc");
+            System.out.println("2. Nhap danh sach sinh vien");
+            System.out.println("3. In danh sach sinh vien");
+            System.out.println("4. Thoat");
+            System.out.print("Chon chuc nang (1-4): ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Nhap so luong mon hoc: ");
+                    int numMonHoc = scanner.nextInt();
+                    scanner.nextLine();
+
+                    for (int i = 0; i < numMonHoc; i++) {
+                        System.out.println("Nhap thong tin mon hoc thu " + (i + 1) + ":");
+                        System.out.print("Ma mon hoc: ");
+                        String maMH = scanner.nextLine();
+                        System.out.print("Ten mon hoc: ");
+                        String tenMH = scanner.nextLine();
+                        System.out.print("So tin chi: ");
+                        int soHT = scanner.nextInt();
+                        scanner.nextLine();
+
+                        MonHoc monHoc = new MonHoc(maMH, tenMH, soHT);
+                        danhSachMonHoc.add(monHoc);
+                    }
+                    break;
+                case 2:
+                    System.out.print("Nhap so luong sinh vien: ");
+                    int numSinhVien = scanner.nextInt();
+                    scanner.nextLine();
+
+                    for (int i = 0; i < numSinhVien; i++) {
+                        System.out.println("Nhap thong tin sinh vien thu " + (i + 1) + ":");
+                        System.out.print("Ma sinh vien: ");
+                        String maSV = scanner.nextLine();
+                        System.out.print("Ho ten: ");
+                        String hoTen = scanner.nextLine();
+                        System.out.print("Gioi tinh (Nam/Nu): ");
+                        boolean gioiTinh = scanner.nextLine().equalsIgnoreCase("Nam");
+                        System.out.print("Nam sinh: ");
+                        int namSinh = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.print("Noi sinh: ");
+                        String noiSinh = scanner.nextLine();
+
+                        SinhVien sinhVien = new SinhVien(maSV, hoTen, gioiTinh, namSinh, noiSinh);
+
+                        System.out.print("Nhap so luong mon hoc sinh vien hoc: ");
+                        int numMonHocSV = scanner.nextInt();
+                        scanner.nextLine();
+                        for (int j = 0; j < numMonHocSV; j++) {
+                            System.out.println("Nhap thong tin mon hoc thu " + (j + 1) + ":");
+                            System.out.print("Ma mon hoc: ");
+                            String maMH = scanner.nextLine();
+                            System.out.print("Ten mon hoc: ");
+                            String tenMH = scanner.nextLine();
+                            System.out.print("Diem mon hoc: ");
+                            double diemMH = scanner.nextDouble();
+                            scanner.nextLine();
+
+                            MonHoc monHoc = new MonHoc(maMH, tenMH, 0);
+                            sinhVien.addMonHoc(monHoc, diemMH);
+                        }
+
+                        danhSachSinhVien.add(sinhVien);
+                    }
+                    break;
+                case 3:
+                    System.out.println("\nDanh sach sinh vien:");
+                    System.out.println("Ma SV| Ho ten| Diem TB| Hoc bong");
+                    for (SinhVien sv : danhSachSinhVien) {
+                        System.out.println(sv);
+                    }
+                    break;
+                case 4:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Chuc nang k hop le.Chon lai");
+            }
+        }
+
+        scanner.close();
+    }
+}
