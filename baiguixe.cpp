@@ -1,248 +1,296 @@
-#include <iostream>
-#include <ctime>
-#include <vector>
-#include <fstream>
+#include<iostream>
+#include<string>
+#include<conio.h>
+#include<fstream>
+
 using namespace std;
 
-class Xe
+// Khai bao lop cha : class XE
+class XE
 {
-private:
-    string veXe;
-    string bienSo;
+protected:
+    string HoTenNguoiThue;
+    float SoGioThue;
 
 public:
-    void nhap();
-    void in();
-    void setXe(string veXe, string bienSo)
+    void NhapThongTin()
     {
-        this->veXe = veXe;
-        this->bienSo = bienSo;
+        while (getchar() != '\n'); //Xoa bo nho dem truoc khi nhap chuoi
+        cout << "\nNhap ho ten nguoi thue: ";
+        getline(cin, HoTenNguoiThue);
+        cout << "Nhap so gio thue: ";
+        cin >> SoGioThue;
     }
-    string getveXe()
-    {
-        return veXe;
-    }
-    string getbienSo()
-    {
-        return bienSo;
-    }
-    void DateTime()
-    {
-        time_t now = time(0);
-        tm *t = localtime(&now);
 
-        cout << "Thong tin ngay va gio: "
-             << t->tm_mday << "/" << 1 + t->tm_mon << "/" << 1900 + t->tm_year << " " << t->tm_hour << ":" << t->tm_min << ":" << t->tm_sec << endl;
-    }
-    void inThongTin()
+    void XuatThongTin()
     {
-        cout << "================================" << endl;
-        in();
-        cout << "================================" << endl;
+        cout << "\nHo ten nguoi thue: " << HoTenNguoiThue;
+        cout << "\nSo gio thue: " << SoGioThue;
     }
 };
 
-void Xe::nhap()
+//Khai bao lop con: class XEDAP ke thua lai class XE
+class XEDAP : public XE
 {
-    cout << "Nhap ve xe:";
-    getline(cin, veXe);
-    cout << "Nhap bien so xe:";
-    getline(cin, bienSo);
-}
+public:
+    float TinhTienThueXe()
+    {
+        return 10000 + ((SoGioThue - 1) * 8000);
+    }
+};
 
-void Xe::in()
-{
-    cout << "Thong tin ve xe:" << getveXe() << endl;
-    cout << "Thong tin bien so xe:" << getbienSo() << endl;
-    DateTime();
-}
-
-class Ql_Xe : public Xe
+//Khai bao lop con: class XEMAY ke thua lai class XE
+class XEMAY : public XE
 {
 private:
-    vector<Xe> dsXe;
-    int doanhThu;
+    int LoaiXe;
+    string BienSo;
 
 public:
-    Ql_Xe() : doanhThu(0) {} // Khởi tạo doanh thu bằng 0
-
-    void themXe(Xe xe)
+    void NhapThongTin()
     {
-        dsXe.push_back(xe);
+        XE::NhapThongTin();
+        cout << "\nNhap loai xe can thue (100-250 contay): ";
+        cin >> LoaiXe;
+        while (getchar() != '\n'); //Xoa bo nho dem truoc khi nhap chuoi
+        cout << "\nNhap bien so: ";
+        getline(cin, BienSo);
     }
 
-    void tienVe()
+    void XuatThongTin()
     {
-        cout << "0_la xe may: 1_la oto" << endl;
-        cout << "Vui long nhap lua chon:";
-        int luachon;
-        cin >> luachon;
-        cin.ignore();
-        if (luachon == 0)
+        XE::XuatThongTin();
+        cout << "\nLoai xe: " << LoaiXe;
+        cout << "\nBien so: " << BienSo;
+    }
+
+    float TinhTienThueXe()
+    {
+        float s = 0;
+        if (LoaiXe == 100)
         {
-            cout << "So tien cua ban phai tra la: 5.000VND" << endl;
-            doanhThu += 5000; // Cập nhật doanh thu
-        }
-        else if (luachon == 1)
-        {
-            cout << "So tien ma ban phai tra la 20.000VND" << endl;
-            doanhThu += 20000; // Cập nhật doanh thu
+            s = 150000;
         }
         else
         {
-            cout << "Lua chon cua ban ko hop le!" << endl;
+            s = 200000;
         }
-        luuDoanhThu();
+        return s + ((SoGioThue - 1) * 100000);
     }
 
-    void timKiemXe()
+    // GETTER - LOAI XE
+    int Getter_LoaiXe()
     {
-        string bienSoXe;
-        cout << "Nhap bien so xe can tim:";
-        getline(cin, bienSoXe);
-
-        bool found = false;
-        for (int i = 0; i < dsXe.size(); i++)
-        {
-            if (bienSoXe == dsXe[i].getbienSo())
-            {
-                dsXe[i].inThongTin();
-                found = true;
-                break;
-            }
-        }
-
-        if (!found)
-        {
-            cout << "Khong co thong tin ve xe!" << endl;
-        }
+        return LoaiXe;
     }
 
-    void XuatXe()
+    void Setter_LoaiXe(int LOAIXE)
     {
-        string vexe;
-        cout << "Nhap ve xe cua ban de lay xe:";
-        getline(cin, vexe);
-
-        bool found = false;
-        for (int i = 0; i < dsXe.size(); i++)
-        {
-            if (vexe == dsXe[i].getveXe())
-            {
-                cout << "Ve xe " << vexe << " cua ban dung." << endl;
-                cout << "Cam on ban da su dung dich vu cua chung toi!" << endl;
-                found = true;
-                break;
-            }
-        }
-
-        if (!found)
-        {
-            cout << "Ve xe " << vexe << " khong hop le!" << endl;
-            cout << "Vui long kiem tra lai ve xe cua ban." << endl;
-        }
-    }
-
-    void luuThongTin()
-    {
-        ofstream file("thongtin.txt", ios::app);
-        for (int i = 0; i < dsXe.size(); i++)
-        {
-            file << "Ve xe: " << dsXe[i].getveXe() << endl;
-            file << "Bien so xe: " << dsXe[i].getbienSo() << endl;
-            file << " ";
-            dsXe[i].DateTime();
-        }
-        file.close();
-    }
-
-    void luuDoanhThu()
-    {
-        ofstream file("doanhthu.txt", ios::app);
-        file << "Doanh thu trong ngay la: " << doanhThu << "VND" << endl;
-        file.close();
-    }
-
-    void tinhTongDoanhThu()
-    {
-        ifstream file("doanhthu.txt");
-        string line;
-        int tongDoanhThu = 0;
-        while (getline(file, line))
-        {
-            size_t pos = line.find(": ");
-            if (pos != string::npos)
-            {
-                string strDoanhThu = line.substr(pos + 2, line.length() - pos - 5); // Loại bỏ "VND" và dấu cách
-                tongDoanhThu += stoi(strDoanhThu);
-            }
-        }
-        file.close();
-        cout << "Tong doanh thu la: " << tongDoanhThu << "VND" << endl;
-    }
-
-    // New method to get dsXe vector
-    vector<Xe> &getDsXe()
-    {
-        return dsXe;
+        LoaiXe = LOAIXE;
     }
 };
 
-void menu()
+//Luu thong tin vao file ttnguoidung
+void luuThongTinNguoiDungVaoFile(const string &hoTen, float soGioThue)
 {
-    cout << "1.Nhap thong tin khach hang" << endl;
-    cout << "2.In thong tin khach hang" << endl;
-    cout << "3.Tien ve phai tra" << endl;
-    cout << "4.Tim kiem thong tin xe" << endl;
-    cout << "5.Xuat xe" << endl;
-    cout << "6.Tinh tong doanh thu" << endl;
-    cout << "7.Thoat khoi chuong trinh" << endl;
+    ofstream openFile("C:\ttnguoidung.txt", ios::app); // mo file de ghi du lieu
+
+    if (openFile.is_open())
+    {
+        // ghi tt nguoi dung vao file
+        openFile << "Ho ten nguoi thue: " << hoTen << ", So gio thue: " << soGioThue << endl;
+
+        // Dong file khi ghi xog
+        openFile.close();
+        cout << "Da luu thong tin nguoi dung vao file." << endl;
+    }
+    else
+    {
+        cout << "Khong the mo file de ghi du lieu." << endl;
+    }
+}
+
+// Xuat tat ca thong tin thue xe
+void Xuat_Tat_Ca_Thong_Tin_Thue_Xe(XEDAP ds_xedap[], int n, XEMAY ds_xemay[], int m)
+{
+    int dem = 1;
+    cout << "\n\n\t\t DANH SACH THUE XE DAP\n";
+    //XUat danh sach xe dap
+    for (int i = 0; i < n; i++)
+    {
+        cout << "\n\t THONG TIN THUE XE DAP THU" << dem++ << endl;
+        ds_xedap[i].XuatThongTin();
+        cout << "\n Tien thue: " << (size_t)ds_xedap[i].TinhTienThueXe();
+    }
+    cout << "\n\n\t\t DANH SACH THUE XE MAY\n";
+    //XUat danh sach xe may
+    for (int i = 0; i < m; i++)
+    {
+        cout << "\n\t THONG TIN THUE XE MAY THU" << dem++ << endl;
+        ds_xemay[i].XuatThongTin();
+        cout << "\n Tien thue: " << (size_t)ds_xemay[i].TinhTienThueXe();
+    }
+}
+
+// Tinh tong tien thue xe dap va xe may
+float Tinh_Tong_Tien_Thue_Xe(XEDAP ds_xedap[], int n, XEMAY ds_xemay[], int m)
+{
+    float tong = 0;
+    //Duyet danh sach xe dap
+    for (int i = 0; i < n; i++)
+    {
+        tong += ds_xedap[i].TinhTienThueXe();
+    }
+
+    //Duyet danh sach xe may
+    for (int i = 0; i < m; i++)
+    {
+        tong += ds_xemay[i].TinhTienThueXe();
+    }
+    return tong;
+}
+
+// Ham quan ly cac loai xe
+void Menu(XEDAP ds_xedap[], int n, XEMAY ds_xemay[], int m)
+{
+    int luachon;
+    while (true)
+    {
+        system("cls");
+        cout << "\n\n\t\t =====QUAN LY XE=====";
+        cout << "\n\t1. Nhap danh sach thue xe dap va xe may";
+        cout << "\n\t2. Xuat tat ca thong tin thue xe";
+        cout << "\n\t3. Tinh tong so tien cho thue xe dap va xe may";
+        cout << "\n\t4. Xuat tat ca cac thong tin lien quan den viec thue xe dap";
+        cout << "\n\t5. Xuat tat ca cac thong tin lien quan den viec thue xe may";
+        cout << "\n\t6. Tinh tong so tien cho thue xe may loai 100 phan khoi";
+        cout << "\n\t7. Tinh tong so tien cho thue xe may loai con tay";
+        cout << "\n\t0. Ket thuc";
+        cout << "\n\n\t\t ====== END ======";
+
+        cout << "\nNhap lua chon: ";
+        cin >> luachon;
+        if (luachon == 1)
+        {
+            int chon;
+            while (true)
+            {
+                system("cls");
+                cout << "\n1. Thue XE DAP";
+                cout << "\n2. Thue XE MAY";
+                cout << "\n0. Ket thuc";
+
+                cout << "\nNhap loai xe muon thue: ";
+                cin >> chon;
+
+                if (chon == 1)
+                {
+                    XEDAP x;
+                    cout << "\n\n\t\t NHAP THONG TIN THUE XE DAP\n";
+                    x.NhapThongTin();
+                    ds_xedap[n] = x;
+                    n++;
+                }
+                else if (chon == 2)
+                {
+                    XEMAY x;
+                    cout << "\n\n\t\t NHAP THONG TIN THUE XE MAY\n";
+                    x.NhapThongTin();
+                    ds_xemay[m] = x;
+                    m++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        else if (luachon == 2)
+        {
+            Xuat_Tat_Ca_Thong_Tin_Thue_Xe(ds_xedap, n, ds_xemay, m);
+            system("pause");
+        }
+        else if (luachon == 3)
+        {
+            cout << "\n\n\t\tTONG TIEN THUE XE : " << (size_t)Tinh_Tong_Tien_Thue_Xe(ds_xedap, n, ds_xemay, m);
+            system("pause");
+        }
+        else if (luachon == 4)
+        {
+            cout << "\n\n\t\t DANH SACH THUE XE DAP\n";
+            //Xuat tat ca thong tin thue xe dap 
+            for (int i = 0; i < n; i++)
+            {
+                cout << "\n\t THONG TIN THUE XE DAP THU" << i + 1 << endl;
+                ds_xedap[i].XuatThongTin();
+                cout << "\n Tien thue: " << (size_t)ds_xedap[i].TinhTienThueXe();
+            }
+            system("pause");
+        }
+        else if (luachon == 5)
+        {
+            cout << "\n\n\t\t DANH SACH THUE XE MAY\n";
+            //Xuat tat ca thong tin thue xe may
+            for (int i = 0; i < m; i++)
+            {
+                cout << "\n\t THONG TIN THUE XE MAY THU" << i + 1 << endl;
+                ds_xemay[i].XuatThongTin();
+                cout << "\n Tien thue: " << (size_t)ds_xemay[i].TinhTienThueXe();
+            }
+            system("pause");
+        }
+        else if (luachon == 6)
+        {
+            int dem = 0;
+            cout << "\n\n\t\t DANH SACH THUE XE MAY LOAI 100 PHAN KHOI\n";
+            //Duyet danh sach xe may
+            for (int i = 0; i < m; i++)
+            {
+                if (ds_xemay[i].Getter_LoaiXe() == 100)
+                {
+                    cout << "\n\t THONG TIN THUE XE MAY THU" << ++dem << endl;
+                    ds_xemay[i].XuatThongTin();
+                    cout << "\n Tien thue: " << (size_t)ds_xemay[i].TinhTienThueXe();
+                }
+            }
+            system("pause");
+        }
+        else if (luachon == 7)
+        {
+            int dem = 0;
+            cout << "\n\n\t\t DANH SACH THUE XE MAY LOAI 250 PHAN KHOI\n";
+            //Duyet danh sach xe may
+            for (int i = 0; i < m; i++)
+            {
+                if (ds_xemay[i].Getter_LoaiXe() == 250)
+                {
+                    cout << "\n\t THONG TIN THUE XE MAY THU" << ++dem << endl;
+                    ds_xemay[i].XuatThongTin();
+                    cout << "\n Tien thue: " << (size_t)ds_xemay[i].TinhTienThueXe();
+                }
+            }
+            system("pause");
+        }
+        else
+        {
+            break;
+        }
+    }
 }
 
 int main()
 {
-    Ql_Xe xe;
-    menu();
-    int luachon;
-    do
-    {
-        cout << "Vui long nhap lua chon:";
-        cin >> luachon;
-        cin.ignore();
-        switch (luachon)
-        {
-        case 1:
-        {
-            Xe new_xe; // create a new instance of Xe
-            new_xe.nhap();
-            xe.themXe(new_xe); // Thêm xe vào danh sách sau khi nhập thông tin
-            xe.luuThongTin();
-            break;
-        }
-        case 2:
-            for (int i = 0; i < xe.getDsXe().size(); i++)
-            {
-                xe.getDsXe()[i].inThongTin();
-            }
-            break;
-        case 3:
-            xe.tienVe();
-            break;
-        case 4:
-            xe.timKiemXe();
-            break;
-        case 5:
-            xe.XuatXe();
-            break;
-        case 6:
-            xe.tinhTongDoanhThu(); // Tính tổng doanh thu khi được chọn
-            break;
-        case 7:
-            break;
-        default:
-            cout << "Lua chon ko hop le!" << endl;
-            break;
-        }
-    } while (luachon != 7);
-    return 0;
-}
+    XEDAP ds_xedap[100];
+    int n = 0;
+    XEMAY ds_xemay[100];
+    int m = 0;
+
+    std::string hoTen;
+    float soGioThue;
+       
+        luuThongTinNguoiDungVaoFile(hoTen, soGioThue);
+
+        // goi ham menu 
+        Menu(ds_xedap, n, ds_xemay, m);
+       return 0;
+    }
